@@ -6,16 +6,7 @@ pygame.init()
 
 
 def get_fitted_font(font_name, text, max_width, base_size, min_size=14, step=2):
-	"""
-	Returns a SysFont sized so that `text` renders no wider than max_width.
-
-	Not every computer has the same fonts installed. If 'comicsans' isn't
-	found, Pygame silently substitutes a different font - and some
-	substitutes (e.g. Courier New) are much wider per character. Rendering
-	at a fixed size can then overflow past the edges of the window. This
-	shrinks the font a little at a time until the text actually fits,
-	so the title/controls text always stays fully on screen.
-	"""
+	
 	size = base_size
 	font = pygame.font.SysFont(font_name, size)
 
@@ -27,16 +18,7 @@ def get_fitted_font(font_name, text, max_width, base_size, min_size=14, step=2):
 
 
 class DrawInformation:
-	"""
-	Holds everything needed to draw the current state of the program:
-	the window, the list of numbers, and the math used to turn those
-	numbers into bars on screen.
-
-	We use a class (instead of just a bunch of loose variables) because
-	the sorting functions, the draw functions, and the main loop all need
-	to share this same information. Passing one object around is much
-	simpler than passing 5-6 separate arguments everywhere.
-	"""
+	
 
 	BLACK = 0, 0, 0
 	WHITE = 255, 255, 255
@@ -75,12 +57,7 @@ class DrawInformation:
 		self.set_list(lst)
 
 	def set_list(self, lst):
-		"""
-		Called whenever we get a brand new list (start of the program,
-		or after pressing Reset). It works out the math needed to convert
-		list values into bar positions/heights, so draw_list() doesn't
-		have to recalculate this for every single bar.
-		"""
+		
 		self.lst = lst
 		self.min_val = min(lst)
 		self.max_val = max(lst)
@@ -95,7 +72,7 @@ class DrawInformation:
 
 
 def draw(draw_info, algo_name, ascending):
-	"""Draws the whole screen: background, title, controls text, and bars."""
+
 	draw_info.window.fill(draw_info.BACKGROUND_COLOR)
 
 	# Leave a small margin on each side so text never touches the edges.
@@ -121,15 +98,7 @@ def draw(draw_info, algo_name, ascending):
 
 
 def draw_list(draw_info, color_positions={}, clear_bg=False):
-	"""
-	Draws every bar in the list.
-
-	color_positions lets a sorting function highlight specific bars
-	(e.g. the two bars currently being compared/swapped) by passing in
-	a dict like {index: color}. clear_bg=True is used mid-sort, so we
-	only redraw the bar area (not the whole window/title) - this is
-	cheaper than calling draw() again every single step.
-	"""
+	
 	lst = draw_info.lst
 
 	if clear_bg:
@@ -163,14 +132,7 @@ def generate_starting_list(n, min_val, max_val):
 
 
 def bubble_sort(draw_info, ascending=True):
-	"""
-	Standard bubble sort, written as a GENERATOR (it uses `yield`).
-
-	Every time we make a swap, we redraw the list and then `yield`.
-	Pausing here (instead of returning) is what lets the main loop keep
-	handling window/keyboard events between each visual step, instead of
-	the whole list being sorted instantly in one frame.
-	"""
+	
 	lst = draw_info.lst
 
 	for i in range(len(lst) - 1):
@@ -210,15 +172,7 @@ def insertion_sort(draw_info, ascending=True):
 
 
 def selection_sort(draw_info, ascending=True):
-	"""
-	Selection sort - our addition on top of the instructor's project.
-
-	Core idea: for each position i, find the smallest (or largest, if
-	descending) remaining value and swap it into position i.
-
-	Written in the same generator style as bubble_sort/insertion_sort so
-	it plugs into the exact same main loop / next() mechanism.
-	"""
+	
 	lst = draw_info.lst
 
 	for i in range(len(lst) - 1):
